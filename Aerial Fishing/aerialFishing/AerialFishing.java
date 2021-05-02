@@ -15,7 +15,7 @@ import org.osbot.rs07.script.ScriptManifest;
 import paint.*;
 import utils.*;
 
-@ScriptManifest(author = "Fury Shark", info = "", name = "Aerial Fishing", version = 1.0, logo = "")
+@ScriptManifest(author = "Fury Shark", info = "", name = "Aerial Fishing", version = 1.0, logo = "https://i.imgur.com/56TxrYr.png")
 public class AerialFishing extends Script {
 
 	private PaintTools pt;
