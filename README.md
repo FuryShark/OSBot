@@ -11,3 +11,4 @@ Easy crafting training
 
 Lumbridge Firemaker
 Lights the logs on lumbridge castle roof
+ 
