@@ -1,7 +1,6 @@
 # OSBot
 
 AIO Miner!
-
 Mine anything, anywhere!
 
 Aerial Fishing
