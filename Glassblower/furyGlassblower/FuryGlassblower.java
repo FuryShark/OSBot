@@ -21,7 +21,7 @@ public class FuryGlassblower extends Script {
 
 
 	private final String[] product = { "Beer glass", "Empty candle lantern", "Empty oil lamp", "Oil lantern", "Vial",
-			"Fishbowl", "Unpowered orb", "Lantern lens", "Empty light orb" };
+			"Empty fishbowl", "Unpowered orb", "Lantern lens", "Empty light orb" };
 
 	@Override
 	public void onStart() throws InterruptedException {
