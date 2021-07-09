@@ -50,28 +50,32 @@ public class AIOMiner extends Script {
 	private Area surroundingArea, miningArea;
 
 	private final ContainsNameFilter<Item> pickFilter = new ContainsNameFilter<Item>(pickaxes), 
-			 oreFilter = new ContainsNameFilter<Item>(ores);
+			oreFilter = new ContainsNameFilter<Item>(ores);
 	private KeyListener keyListener = new KeyListener(this);
 	private MouseListener mouseListener = new MouseListener(this);
-	
-	
+	private Position nextPos;
+
+
+
 	public void onStart() throws InterruptedException {
 		xpTracker = getExperienceTracker();
 		xpTracker.start(Skill.MINING);
-		
+		getBot().setLoadingStage("Test");
 		pt = new PaintTools(xpTracker, this);
 		paint = new Paint(pt, this);
 		paint.exchangeContext(getBot());
 		getBot().addPainter(paint);
 		pt.setStatus("Select a rock highlighted in red to mine it!");
-		
+
 		getBot().addMouseListener(mouseListener);
 		getBot().addKeyListener(keyListener);
-		
+
 		surroundingArea = myPlayer().getArea(10);
 		miningArea = myPlayer().getArea(3);
 		rocks = getNewRocks();
 		nextEnergy = random(minEnergy, maxEnergy);
+
+
 	}
 
 	public int onLoop() throws InterruptedException {
@@ -103,13 +107,25 @@ public class AIOMiner extends Script {
 						Sleep.sleepUntil(() -> getSettings().isRunning(), 5000);
 					}
 				} else {
-					RS2Object rock = getObjects().closest(o -> rockPositions.containsKey(o.getPosition()) && o.getId() == rockPositions.get(o.getPosition()));
-					if (rock != null && rock.interact("Mine")) {
+					RS2Object rock = getObjects().closest(o -> rockPositions.containsKey(o.getPosition()) && o.getId() == rockPositions.get(o.getPosition()) && nextPos(o));
+					if (rock != null) {
+						Position oldPos = rock.getPosition();
 						pt.setStatus("Mining...");
-						Sleep.sleepUntil(() -> myPlayer().isAnimating() || !rock.exists(), 5000);
-						if (myPlayer().isAnimating()) {
-							Sleep.sleepUntil(() -> !rock.exists() || getInventory().isFull(), 50000);
+						if (rock.interact("Mine")) {
+							Sleep.sleepUntil(() -> myPlayer().isAnimating() || !rock.exists(), 5000);
+							if (myPlayer().isAnimating()) {
+								if (getInventory().getEmptySlots() > 1) {
+									RS2Object next = getObjects().closest(o -> rockPositions.containsKey(o.getPosition()) && o.getId() == rockPositions.get(o.getPosition()) && !o.getPosition().equals(oldPos));
+									if (next != null) {
+										nextPos = next.getPosition();
+										next.hover();
+									}
+								}
+								Sleep.sleepUntil(() -> !rock.exists() || getInventory().isFull(), 50000);
+							}
 						}
+					} else {
+						nextPos = null;
 					}
 				}
 			} else {
@@ -125,11 +141,18 @@ public class AIOMiner extends Script {
 		return random(200, 300);
 	}
 
+	private boolean nextPos(RS2Object o) {
+		if (nextPos != null) {
+			return o.getPosition().equals(nextPos);
+		}
+		return true;
+	}
+
 	public void onExit() {
 		getBot().removeKeyListener(keyListener);
 		getBot().removeMouseListener(mouseListener);
 		getBot().removePainter(paint);
-			
+
 		log("");
 		log("== AIO Miner Results ==");
 		log("Time ran: " + NumberFormat.timeFormatDHMS(pt.getTimeRan()));
@@ -137,19 +160,19 @@ public class AIOMiner extends Script {
 		log("Levels gained: " + xpTracker.getGainedLevels(Skill.MINING));
 		log("");
 	}
-	
+
 	public PaintTools getPt() {
 		return pt;
 	}
-	
+
 	public List<RS2Object> getNewRocks() {
 		return getObjects().getAll().stream().filter(o -> surroundingArea.contains(o) && o.getName().equals("Rocks") && o.isVisible()).collect(Collectors.toList());
 	}
-	
+
 	public List<RS2Object> getRocks() {
 		return rocks;
 	}
-	
+
 	public HashMap<Position, Integer> getRockPositions() {
 		return rockPositions;
 	}
@@ -166,7 +189,7 @@ public class AIOMiner extends Script {
 	public void toggleBankOres() {
 		bankOres = !bankOres;		
 	}
-	
+
 	public boolean shouldBankOres() {
 		return bankOres;
 	}
