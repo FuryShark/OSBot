@@ -1,8 +1,6 @@
 package aioMiner;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +26,8 @@ public class AIOMiner extends Script {
 	private ExperienceTracker xpTracker;
 	private PaintTools pt;
 	private Paint paint;
-
+	private CustomMouse customMouse;
+	
 	private int minEnergy = 30, maxEnergy = 60, nextEnergy;
 	private boolean bankOres;
 
@@ -36,8 +35,8 @@ public class AIOMiner extends Script {
 	private List<RS2Object> rocks;
 
 	private final String[] ores = new String[] { "Clay", "Rune essence", "Copper ore", "Tin ore", "Blurite ore",
-			"Iron ore", "Silver ore", "Volcanic ash", "Pure essence", "Coal", "Gold ore", "Mithril ore",
-			"Adamantite ore", "Runite ore", "Amethyst" },
+			"Iron ore", "Silver ore", "Pure essence", "Coal", "Gold ore", "Mithril ore",
+			"Adamantite ore", "Runite ore", "Amethyst", "Uncut sapphire", "Uncut emerald", "Uncut ruby", "Uncut diamond", "Soda ash" },
 			pickaxes = new String[] { "Bronze pickaxe", "Iron pickaxe", "Steel pickaxe", "Black pickaxe",
 					"Mithril pickaxe", "Adamant pickaxe", "Rune pickaxe", "Dragon pickaxe" };
 
@@ -58,6 +57,13 @@ public class AIOMiner extends Script {
 
 
 	public void onStart() throws InterruptedException {
+		customMouse = new CustomMouse();
+		customMouse.exchangeContext(getBot());
+		try {
+			customMouse.getCustomMouse(getDirectoryData());
+		} catch (IOException e) {
+			log(e);
+		}
 		xpTracker = getExperienceTracker();
 		xpTracker.start(Skill.MINING);
 		getBot().setLoadingStage("Test");
@@ -70,7 +76,7 @@ public class AIOMiner extends Script {
 		getBot().addMouseListener(mouseListener);
 		getBot().addKeyListener(keyListener);
 
-		surroundingArea = myPlayer().getArea(10);
+		surroundingArea = myPlayer().getArea(14);
 		miningArea = myPlayer().getArea(3);
 		rocks = getNewRocks();
 		nextEnergy = random(minEnergy, maxEnergy);
@@ -166,7 +172,7 @@ public class AIOMiner extends Script {
 	}
 
 	public List<RS2Object> getNewRocks() {
-		return getObjects().getAll().stream().filter(o -> surroundingArea.contains(o) && o.getName().equals("Rocks") && o.isVisible()).collect(Collectors.toList());
+		return getObjects().getAll().stream().filter(o -> surroundingArea.contains(o) && (o.getName().equals("Rocks") || o.getName().equals("Ash pile")) && o.isVisible()).collect(Collectors.toList());
 	}
 
 	public List<RS2Object> getRocks() {
