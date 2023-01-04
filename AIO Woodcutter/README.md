@@ -1,3 +1,5 @@
+Current version: 2.0
+
 CLI:
 
 NOTE: You will still need to select trees after loading in game.
