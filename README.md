@@ -1,18 +1,3 @@
-# OSBot
+# FurySharks Script Repository
 
-AIO Miner!
-
-Mine anything, anywhere!
-
-Aerial Fishing
-
-Fishing & Hunter exp @ Molch Island
-
-Glassblower
-
-Easy crafting training
-
-Lumbridge Firemaker
-
-Lights the logs on lumbridge castle roof
- 
+A collection of most likely simple, but, free and open source scripts
