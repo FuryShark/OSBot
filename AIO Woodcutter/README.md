@@ -1,6 +1,7 @@
-Current version: 2.0
+# AIO Woodcutter
+Version 2.0
 
-CLI:
+## CLI:
 
 NOTE: You will still need to select trees after loading in game.
 
