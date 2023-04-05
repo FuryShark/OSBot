@@ -172,7 +172,7 @@ public class AIOMiner extends Script {
 	}
 
 	public List<RS2Object> getNewRocks() {
-		return getObjects().getAll().stream().filter(o -> surroundingArea.contains(o) && (o.getName().equals("Rocks") || o.getName().equals("Ash pile")) && o.isVisible()).collect(Collectors.toList());
+		return getObjects().getAll().stream().filter(o -> surroundingArea.contains(o) && (o.getName().endsWith(" rocks") || o.getName().equals("Ash pile")) && o.isVisible()).collect(Collectors.toList());
 	}
 
 	public List<RS2Object> getRocks() {
