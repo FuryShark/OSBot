@@ -20,7 +20,7 @@ import listeners.*;
 import utils.*;
 import paint.*;
 
-@ScriptManifest(author = "Fury Shark", info = "", name = "Fury AIO Miner", version = 0.0, logo = "https://i.imgur.com/Oa4mAAS.png")
+@ScriptManifest(author = "Fury Shark", info = "", name = "Fury AIO Miner", version = 2.0, logo = "https://i.imgur.com/Oa4mAAS.png")
 public class AIOMiner extends Script {
 
 	private ExperienceTracker xpTracker;
@@ -57,6 +57,7 @@ public class AIOMiner extends Script {
 
 
 	public void onStart() throws InterruptedException {
+		log("Version: " + getVersion());
 		customMouse = new CustomMouse();
 		customMouse.exchangeContext(getBot());
 		try {
